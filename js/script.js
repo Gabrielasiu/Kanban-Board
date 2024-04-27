@@ -16,35 +16,30 @@ function generateTaskId() {
 }
 
 generateTaskId();
+
+
 // Todo: create a function to create a task card
-function createTaskCard(task) {
+function createTaskCard(taskTitle, taskDescription, dueDate) {
+        const taskCardHTML = `
+            <div class="task-card">
+                <h2>${taskTitle}</h2>
+                <p>${taskDescription}</p>
+                <p>Due Date: ${dueDate}</p>
+            </div>
+        `;
+        return taskCardHTML; 
 
+    }
+    createTaskCard();
 
+    const taskTitle = "Complete Challenge 5";
+const taskDescription = "Create a function to generate a task card.";
+const dueDate = "2022-12-31";
 
+// Generate task card HTML
+const taskCard = createTaskCard(taskTitle, taskDescription, dueDate);
+console.log(taskCard);
 
-}
-//  TASKK-CARD MINIPROJECT    function createProjectCard(project) {
-//         const taskCard = $('<div>')
-//           .addClass('card project-card draggable my-3')
-//           .attr('data-project-id', project.id);
-//         const cardHeader = $('<div>').addClass('card-header h4').text(project.name);
-//         const cardBody = $('<div>').addClass('card-body');
-//         const cardDescription = $('<p>').addClass('card-text').text(project.type);
-//         const cardDueDate = $('<p>').addClass('card-text').text(project.dueDate);
-//         const cardDeleteBtn = $('<button>')
-//           .addClass('btn btn-danger delete')
-//           .text('Delete')
-//           .attr('data-project-id', project.id);
-//         cardDeleteBtn.on('click', handleDeleteProject);
-      
-        // ? Sets the card background color based on due date. Only apply the styles if the dueDate exists and the status is not done.
-        
-      
-        // ? Return the card so it can be appended to the correct lane.
-       // return taskCard;
-        
-  //    }
-//}
 
 // Todo: create a function to render the task list and make cards draggable
 function renderTaskList() {
@@ -52,10 +47,29 @@ function renderTaskList() {
 }
 
 // Todo: create a function to handle adding a new task
-function handleAddTask(event){
- $("btn btn-success").click();
-    console.log(clic);
-}
+function handleAddTask(event){}
+
+const addTaskbtn = document.getElementById('addTaskbtn')
+const modal = document.getElementById('modal')
+
+addTaskbtn.addEventListener('click', function(){
+console.log('se hizo click en el boton')
+modal.style.display='block';
+});
+
+const closeModal = document.getElementById('close')
+closeModal.addEventListener('click', function(){
+    modal.style.display='none';
+    console.log('se cerró el modal');
+});
+
+
+//  const closeModal = document.getElementById('close');
+
+//  closeModal.addEventListener('click', function(){
+//     modal.style.display='none';
+
+//  });
 
 // Todo: create a function to handle deleting a task
 function handleDeleteTask(event){
