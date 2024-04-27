@@ -17,7 +17,7 @@ function generateTaskId() {
 
 generateTaskId();
 
-
+///////////////////////////////////////////////////////////////////////////////////////
 // Todo: create a function to create a task card
 function createTaskCard(taskTitle, taskDescription, dueDate) {
         const taskCardHTML = `
@@ -64,12 +64,11 @@ closeModal.addEventListener('click', function(){
 });
 
 
-//  const closeModal = document.getElementById('close');
+//DUE DATE PICKER 
+$( function() {
+    $( "#dueDate" ).datepicker();
+  } );
 
-//  closeModal.addEventListener('click', function(){
-//     modal.style.display='none';
-
-//  });
 
 // Todo: create a function to handle deleting a task
 function handleDeleteTask(event){
