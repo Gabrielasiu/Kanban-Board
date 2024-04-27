@@ -14,3 +14,28 @@ body {
 .task-card:hover {
   cursor: grab;
 }
+
+#addTaskbtn{
+  background-color: rgb(112, 206, 112);
+}
+
+#modal {
+  display: none;
+  flex-direction: row;
+  justify-content: center;
+  width: 300px;
+  padding: 1.3rem;
+  height: 300px;
+  top: 10%;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 15px;
+ 
+}
+#taskTitle, #taskDescription, #dueDate {
+  margin-bottom: 10px;
+}
+
+#contenedor{
+  align-items: center;
+}
