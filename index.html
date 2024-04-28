@@ -26,21 +26,25 @@
     </div>
     <!-- Todo: Create a modal with a form to add tasks -->
     <div id="modal" class="modal">
-      <div class="contenido">
+      <div id="modalContent">
         <span id="close">&times;</span>
         <h2> Add Task </h2>
+        <!-- <ul id="myTaskList"></ul> -->
         <form id="taskForm"></form>
         <!--Task title INPUT-->
         <label for="taskTitle">Title </label>
+      
         <input type="text" id="taskTitle" name="taskTitle" required>
         <!--task DESCRIPTION input-->
         <label for="taskDescription">Task Description </label>
+
         <input type="text" id="taskDescription" name="taskDescription" required>
         <!--DUE DATE-->
         <label for="dueDate"> Date Input</label>
+
         <input type="text" id="dueDate" name="dueDate">
         <!--- SUMIT BUTTON-->
-        <button type="submit"> Add Task </button>
+        <button type="submit" id="submitBtn"> Add Task </button>
         </form>
       </div>
     </div>
