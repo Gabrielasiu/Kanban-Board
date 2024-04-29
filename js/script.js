@@ -1,7 +1,8 @@
 // Retrieve tasks and nextId from localStorage
 let taskList = JSON.parse(localStorage.getItem("tasks"));
 let nextId = JSON.parse(localStorage.getItem("nextId"));
-//let taskContainer = document.getElementById("modalContent");
+
+
 
 
 
@@ -21,23 +22,56 @@ generateTaskId();
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // Todo: create a function to create a task card
+const taskArr = []
+
+//AQUI BUSCAR CON JQUERY COMO HACER LA TASK CARD EN VEZ DE HACERLO CON EL CREATEELEMT
 function createTaskCard(taskTitle, taskDescription, dueDate) {
-        const taskCardHTML = `
-            <div class="task-card">
-                <h2>${taskTitle}</h2>
-                <p>${taskDescription}</p>
-                <p>Due Date: ${dueDate}</p>
-            </div>
-        `;
+        // const taskCardHTML = `
+        //     <div class="task-card">
+        //         <h2>${taskTitle}</h2>
+        //         <p>${taskDescription}</p>
+        //         <p>Due Date: ${dueDate}</p>
+        //     </div>
+        // `;
 
-        const h1el = document.createElement('h1')
-        h1el.textContent = 'hola es mi titulo '
-        const todoList = document.getElementById('todo-cards');
-        todoList.appendChild(h1el);
-        console.log('taskCard', taskCardHTML);
-        return taskCardHTML; 
 
-    }
+        
+       const taskCard = $('<div>').addClass('task-cards');
+
+        //Agregar contenido a la taskcard
+        taskCard.append($('<h3>').text(taskTitle));
+        taskCard.append($('<p>').text('Status: ' + taskDescription));
+        taskCard.append($('<p>').text('Due Date: ' + dueDate));
+      
+      
+        //Agregar la taskcard al contenedor
+        $('#task-card').append(taskCard);
+
+
+        
+        // createTaskCard(taskCard);
+        // const h2el = document.createElement('h3');
+        // const text = document.getElementById('taskTitle');
+        // h2el.textContent = 'mi titulo';     
+        // const todoList1 = document.getElementById('todo-cards');
+        // todoList1.appendChild(h2el);
+        console.log('taskCard', taskCard);
+
+        taskArr.push({
+            taskTitle,
+            taskDescription,
+            dueDate
+        })
+
+        localStorage.setItem("tasks", JSON.stringify(taskArr))
+
+        return taskCard
+
+       
+      }
+      
+        
+    
 
 
 
@@ -48,12 +82,15 @@ function createTaskCard(taskTitle, taskDescription, dueDate) {
 // Todo: create a function to render the task list and make cards draggable
 function renderTaskList() {
     //primero, cuando prpesiono el boton de add task , se renderea mis inputs 
-        const titleInput = localStorage.getItem('taskTitle');
         //const password = localStorage.getItem('password');
-      
-        if (titleInput) {
-          return;
-        }
+      console.log("TASK LIST:¨", taskList)
+
+      if (taskList) {
+        for (const task of taskList) {
+            createTaskCard(task.taskTitle, task.taskDescription, task.dueDate)
+          }
+      }
+
       
     //     userEmailSpan.textContent = email;
     //     userPasswordSpan.textContent = password;
@@ -63,7 +100,6 @@ function renderTaskList() {
 //     console.log('se ve el title en la lista');
 }
 
-renderTaskList();
 // Todo: create a function to handle adding a new task
 function handleAddTask(event){}
 
@@ -82,6 +118,8 @@ function handleDrop(event, ui) {
 
 // Todo: when the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
 $(document).ready(function () {
+renderTaskList();
+
 const addTaskbtn = document.getElementById('addTaskbtn')
 const modal = document.getElementById('modal');
 //const displayModal = getElementById('submitBtn');
@@ -126,11 +164,6 @@ submitBtn.addEventListener('click', function() {
     
     const dueDate = document.getElementById('dueDate').value;
     
-    // const task ={
-    //     title: titleInput,
-    //     description: taskDescription,
-    //     date: dueDate
-    // };
 
     createTaskCard(titleInput, taskDescription, dueDate);
     // Mostrar el modal para agregar una nueva tarea
@@ -156,9 +189,9 @@ submitBtn.addEventListener('click', function() {
 
 
 
-
+})
 //DUE DATE PICKER 
-$( function() {
-    $( "#dueDate" ).datepicker();
-  } );
-});
+// $( function() {
+//     $( "#dueDate" ).datepicker();
+//   } );
+// })
