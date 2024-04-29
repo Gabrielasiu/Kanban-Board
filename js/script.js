@@ -6,6 +6,7 @@ let nextId = JSON.parse(localStorage.getItem("nextId"));
 
 
 
+
 // Todo: create a function to generate a unique task id
 
     function generateTaskId() {
@@ -25,7 +26,7 @@ generateTaskId();
 const taskArr = []
 
 //AQUI BUSCAR CON JQUERY COMO HACER LA TASK CARD EN VEZ DE HACERLO CON EL CREATEELEMT
-function createTaskCard(taskTitle, taskDescription, dueDate) {
+function createTaskCard(id, taskTitle, taskDescription, dueDate) {
         // const taskCardHTML = `
         //     <div class="task-card">
         //         <h2>${taskTitle}</h2>
@@ -42,7 +43,10 @@ function createTaskCard(taskTitle, taskDescription, dueDate) {
         taskCard.append($('<h3>').text(taskTitle));
         taskCard.append($('<p>').text('Status: ' + taskDescription));
         taskCard.append($('<p>').text('Due Date: ' + dueDate));
-      
+        const delBtn = $('<button>').addClass("delBtn").attr('id', id).text('Delete')
+        taskCard.append(delBtn);
+        
+        delBtn.on('click', deleteTask)
       
         //Agregar la taskcard al contenedor
         $('#task-card').append(taskCard);
@@ -57,7 +61,9 @@ function createTaskCard(taskTitle, taskDescription, dueDate) {
         // todoList1.appendChild(h2el);
         console.log('taskCard', taskCard);
 
+
         taskArr.push({
+            id,
             taskTitle,
             taskDescription,
             dueDate
@@ -87,7 +93,7 @@ function renderTaskList() {
 
       if (taskList) {
         for (const task of taskList) {
-            createTaskCard(task.taskTitle, task.taskDescription, task.dueDate)
+            createTaskCard(task.id, task.taskTitle, task.taskDescription, task.dueDate)
           }
       }
 
@@ -116,6 +122,17 @@ function handleDrop(event, ui) {
 
 }
 
+function deleteTask (event) {
+    console.log("event: ", event)
+    const id = event.target.id;
+    console.log("ID: ", id);
+    console.log('me diste click: ', event.target.id)
+    console.log("LAS TASKS: ", taskList);
+   // console.log("filter: ", taskList.filter((task) => task.id != id));
+    localStorage.setItem("tasks", JSON.stringify(taskList.filter((task) => task.id != id)))
+   // location.reload();
+}
+
 // Todo: when the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
 $(document).ready(function () {
 renderTaskList();
@@ -135,6 +152,8 @@ closeModal.addEventListener('click', function(){
     modal.style.display='none';
     console.log('se cerró el modal');
 });
+
+
 
 
 
@@ -163,29 +182,17 @@ submitBtn.addEventListener('click', function() {
     const taskDescription= document.getElementById('taskDescription').value;
     
     const dueDate = document.getElementById('dueDate').value;
-    
 
-    createTaskCard(titleInput, taskDescription, dueDate);
+    createTaskCard(generateTaskId(), titleInput, taskDescription, dueDate);
     // Mostrar el modal para agregar una nueva tarea
     // Puedes agregar aquí la lógica para mostrar el modal si es necesario
 });
 
+const delBtns = $(".delBtn"); 
 
-
-
-//lo que quuiero es que lo añadido al modal, 
-// se guarde en la lista de todo
-//puedo hacer un add event listener para cuando se presione 
-//el add task, se muestre en la todo list 
-
-
-// function modalInfoDisplay(){}
-// const displayModal = document.getElementById('submitbtn')
-// displayModal.addEventListener('click', function(){
-//     console.log('se ve lo que puse en el modal');
-// const modalContent = document.getElementById('modalContent');
-// modalContent.textContent='taskTitle, taskDescription, dueDate'
-// });
+for (let i = 0; i < delBtns.length; i++) {
+    delBtns[i].addEventListener('click', deleteTask)
+}
 
 
 
