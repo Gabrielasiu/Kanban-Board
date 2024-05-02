@@ -9,7 +9,7 @@ let nextId = JSON.parse(localStorage.getItem("nextId"));
 
 // Todo: create a function to generate a unique task id
 
-    function generateTaskId() {
+function generateTaskId() {
         const timestamp = new Date().getTime();
         const randomNum = Math.floor(Math.random() * 1000); // Adjust the range as needed
     
@@ -24,20 +24,10 @@ generateTaskId();
 ///////////////////////////////////////////////////////////////////////////////////////
 // Todo: create a function to create a task card
 const taskArr = []
-
-//AQUI BUSCAR CON JQUERY COMO HACER LA TASK CARD EN VEZ DE HACERLO CON EL CREATEELEMT
-function createTaskCard(id, taskTitle, taskDescription, dueDate) {
-        // const taskCardHTML = `
-        //     <div class="task-card">
-        //         <h2>${taskTitle}</h2>
-        //         <p>${taskDescription}</p>
-        //         <p>Due Date: ${dueDate}</p>
-        //     </div>
-        // `;
-
-
+function createTaskCard(id, taskTitle, taskDescription, dueDate, color) {
+    
         
-       const taskCard = $('<div>').addClass('task-cards');
+       const taskCard = $('<div>').addClass('task-cards').attr('id', id).attr("style", "background-color: " + color);
 
         //Agregar contenido a la taskcard
         taskCard.append($('<h3>').text(taskTitle));
@@ -45,20 +35,21 @@ function createTaskCard(id, taskTitle, taskDescription, dueDate) {
         taskCard.append($('<p>').text('Due Date: ' + dueDate));
         const delBtn = $('<button>').addClass("delBtn").attr('id', id).text('Delete')
         taskCard.append(delBtn);
-        
-        delBtn.on('click', deleteTask)
+
+      
+        $(function() {
+            $("#" + id).draggable();
+            $(".drop-container").droppable({
+                drop: handleDrop
+            });
+        })
+
+        delBtn.on('click', handleDeleteTask)
       
         //Agregar la taskcard al contenedor
         $('#task-card').append(taskCard);
 
 
-        
-        // createTaskCard(taskCard);
-        // const h2el = document.createElement('h3');
-        // const text = document.getElementById('taskTitle');
-        // h2el.textContent = 'mi titulo';     
-        // const todoList1 = document.getElementById('todo-cards');
-        // todoList1.appendChild(h2el);
         console.log('taskCard', taskCard);
 
 
@@ -76,19 +67,13 @@ function createTaskCard(id, taskTitle, taskDescription, dueDate) {
        
       }
       
-        
-    
-
-
-
-
-
-
 
 // Todo: create a function to render the task list and make cards draggable
 function renderTaskList() {
-    //primero, cuando prpesiono el boton de add task , se renderea mis inputs 
-        //const password = localStorage.getItem('password');
+    
+        $( function() {
+            $( "#draggable" ).draggable();
+        })
       console.log("TASK LIST:¨", taskList)
 
       if (taskList) {
@@ -98,16 +83,16 @@ function renderTaskList() {
       }
 
       
-    //     userEmailSpan.textContent = email;
-    //     userPasswordSpan.textContent = password;
-    //   }
-//     const tInput =document.getElementById('taskTitle').value;
-//     localStorage.setItem('TaskTitle', JSON.stringify(tInput));
-//     console.log('se ve el title en la lista');
+    
 }
 
 // Todo: create a function to handle adding a new task
-function handleAddTask(event){}
+function handleAddTask(event){
+
+    console.log('se hizo click en el boton')
+modal.style.display='block';
+
+}
 
 
 
@@ -115,23 +100,26 @@ function handleAddTask(event){}
 // Todo: create a function to handle deleting a task
 function handleDeleteTask(event){
 
+        console.log("event: ", event)
+        const id = event.target.id;
+        console.log("ID: ", id);
+        console.log('me diste click: ', event.target.id)
+        console.log("LAS TASKS: ", taskList);
+        localStorage.setItem("tasks", JSON.stringify(taskList.filter((task) => task.id != id)))
+       
+    
+
 }
 
 // Todo: create a function to handle dropping a task into a new status lane
 function handleDrop(event, ui) {
+    
+    const hiddenNumber = ui.draggable.data('number');
+    ui.draggable.text(hiddenNumber);
+
 
 }
 
-function deleteTask (event) {
-    console.log("event: ", event)
-    const id = event.target.id;
-    console.log("ID: ", id);
-    console.log('me diste click: ', event.target.id)
-    console.log("LAS TASKS: ", taskList);
-   // console.log("filter: ", taskList.filter((task) => task.id != id));
-    localStorage.setItem("tasks", JSON.stringify(taskList.filter((task) => task.id != id)))
-   // location.reload();
-}
 
 // Todo: when the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
 $(document).ready(function () {
@@ -139,13 +127,8 @@ renderTaskList();
 
 const addTaskbtn = document.getElementById('addTaskbtn')
 const modal = document.getElementById('modal');
-//const displayModal = getElementById('submitBtn');
-//const todoList = getElementById('to-do');
 
-addTaskbtn.addEventListener('click', function(){
-console.log('se hizo click en el boton')
-modal.style.display='block';
-});
+addTaskbtn.addEventListener('click', handleAddTask);
 
 const closeModal = document.getElementById('close')
 closeModal.addEventListener('click', function(){
@@ -157,48 +140,47 @@ closeModal.addEventListener('click', function(){
 
 
 
-// esta mal const displayModal = document.getElementById('submitBtn');
 const submitBtn = document.getElementById('submitBtn');
 const todoList = document.getElementById('to-do');
 
-// displayModal.addEventListener('click', function() {
-//     const modalContent = document.getElementById('modalContent');
-//     const taskText = modalContent.value; // Obtener el texto del modal
 
-//     // Crear un nuevo elemento de lista con el texto ingresado
-//     const newTask = document.createElement('li');
-//     newTask.textContent = taskText;
-
-//     // Añadir el nuevo elemento a la lista de tareas
-//     todoList.appendChild(newTask);
-
-// });
 
 
 
 submitBtn.addEventListener('click', function() {
+    let color = "red"
+
     const titleInput = document.getElementById('taskTitle').value;
    
     const taskDescription= document.getElementById('taskDescription').value;
     
-    const dueDate = document.getElementById('dueDate').value;
+    const taskDate = document.getElementById('dueDate').value;
+    const dueDate = new Date(taskDate)
+    const todayDate = new Date()
+    console.log("dueDate: ", dueDate)
+    console.log("fechaDeHoy: ", todayDate)
+    console.log("es la misma fecha? ", dueDate === todayDate)
 
-    createTaskCard(generateTaskId(), titleInput, taskDescription, dueDate);
-    // Mostrar el modal para agregar una nueva tarea
-    // Puedes agregar aquí la lógica para mostrar el modal si es necesario
+    if (dueDate === todayDate) {
+        color = "yellow"
+    }
+
+    console.log("COLOR: ", color)
+
+    createTaskCard(generateTaskId(), titleInput, taskDescription, taskDate, color);
 });
 
 const delBtns = $(".delBtn"); 
 
 for (let i = 0; i < delBtns.length; i++) {
-    delBtns[i].addEventListener('click', deleteTask)
+    delBtns[i].addEventListener('click', handleDeleteTask)
 }
 
-
-
 })
+
+
 //DUE DATE PICKER 
-// $( function() {
-//     $( "#dueDate" ).datepicker();
-//   } );
-// })
+
+$( function() {
+    $( "#dueDate" ).datepicker();
+  } );
