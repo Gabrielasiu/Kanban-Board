@@ -61,10 +61,15 @@ function createTaskCard(id, taskTitle, taskDescription, dueDate, color) {
         })
 
         localStorage.setItem("tasks", JSON.stringify(taskArr))
+                
+        const modal = document.getElementById('modal')
+        modal.style.display = 'none'; 
+
+
 
         return taskCard
 
-       
+
       }
       
 
@@ -74,8 +79,10 @@ function renderTaskList() {
         $( function() {
             $( "#draggable" ).draggable();
         })
-      console.log("TASK LIST:¨", taskList)
+        let taskList = JSON.parse(localStorage.getItem("tasks"));
 
+      console.log("TASK LIST:¨", taskList)
+      $('#task-card').empty();
       if (taskList) {
         for (const task of taskList) {
             createTaskCard(task.id, task.taskTitle, task.taskDescription, task.dueDate)
@@ -101,14 +108,15 @@ modal.style.display='block';
 function handleDeleteTask(event){
 
         console.log("event: ", event)
+        console.log(event.target)
         const id = event.target.id;
         console.log("ID: ", id);
-        console.log('me diste click: ', event.target.id)
+        // console.log('me diste click: ', event.target.id)
+        let taskList = JSON.parse(localStorage.getItem("tasks"));
         console.log("LAS TASKS: ", taskList);
-        localStorage.setItem("tasks", JSON.stringify(taskList.filter((task) => task.id != id)))
-       
-    
-
+        let newList = taskList.filter((task) => task.id != id)
+        localStorage.setItem("tasks", JSON.stringify(newList))
+       renderTaskList();
 }
 
 // Todo: create a function to handle dropping a task into a new status lane
@@ -134,6 +142,7 @@ const closeModal = document.getElementById('close')
 closeModal.addEventListener('click', function(){
     modal.style.display='none';
     console.log('se cerró el modal');
+
 });
 
 
