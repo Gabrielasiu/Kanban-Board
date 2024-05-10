@@ -18,10 +18,10 @@ function generateTaskId() {
 
 
 // Todo: create a function to create a task card
-function createTaskCard(id, taskTitle, taskDescription, dueDate, color) {
+function createTaskCard(id, taskTitle, taskDescription, dueDate, color, status) {
 
 
-    const taskCard = $('<div>').addClass('task-cards').attr('id', id).attr("style", "background-color: " + color);
+    const taskCard = $('<div>').addClass('task-cards').attr('id', id);
 
     //Agregar contenido a la taskcard
     taskCard.append($('<h3>').text(taskTitle));
@@ -45,14 +45,23 @@ function createTaskCard(id, taskTitle, taskDescription, dueDate, color) {
     delBtn.on('click', handleDeleteTask)
 
     //Agregar la taskcard al contenedor
-    $('#task-card').append(taskCard);
-
-    //CUANDO HAGO ESTO DE ABAJO, LAS TASK CXARD SE VAN AGREGANDO PERO AL DONE
-    // $('#in-progress-cards').append(taskCard);
-    // $('#done-cards').append(taskCard);
+    if(status === "to-do"){
+        color = "red";
+        taskCard.attr("style", "background-color: " + color)
+        $('#todo-cards').append(taskCard);
+    }
+    if(status === "in-progress"){
+        color = "yellow";
+        taskCard.attr("style", "background-color: " + color)
+        $('#in-progress-cards').append(taskCard);
+    }
+    if(status === "done"){
+        color = "white";
+        taskCard.attr("style", "background-color: " + color)
+        $('#done-cards').append(taskCard); 
+    }
 
     console.log('taskCard', taskCard);
-
 
 }
 
@@ -62,10 +71,12 @@ function renderTaskList() {
 
 
  
-    $('#task-card').empty();
+    $('#todo-cards').empty();
+    $('#in-progress-cards').empty();
+    $('#done-cards').empty();
     if (taskArr) {
         for (const task of taskArr) {
-            createTaskCard(task.id, task.titleInput, task.taskDescription, task.taskDate, task.color)
+            createTaskCard(task.id, task.titleInput, task.taskDescription, task.taskDate, task.color, task.status)
         }
     }
 
@@ -104,11 +115,22 @@ function handleDeleteTask(event) {
 function handleDrop(event, ui) {
 
 
-    console.log(event.target)
-    console.log(ui.draggable)
+    console.log(event.target.id)
+    console.log(ui.draggable.attr("id"));
 
-    const hiddenNumber = ui.draggable.data('number');
-    ui.draggable.text(hiddenNumber);
+    for(let i  = 0;i < taskArr.length;i++){
+       
+        console.log("before if statement ",taskArr[i])
+       if(taskArr[i].id === ui.draggable.attr("id") ){
+            taskArr[i].status = event.target.id
+            console.log(taskArr[i])
+       }
+       localStorage.setItem("tasks",JSON.stringify(taskArr))
+       renderTaskList();
+    }
+
+    // const hiddenNumber = ui.draggable.data('number');
+    // ui.draggable.text(hiddenNumber);
 
 
 }
@@ -154,27 +176,32 @@ submitBtn.addEventListener('click', function () {
         const taskDate = document.getElementById('dueDate').value;
         const dueDate = new Date(taskDate)
         const todayDate = new Date()
-        console.log("dueDate: ", dueDate)
-        console.log("fechaDeHoy: ", todayDate)
-        console.log("es la misma fecha? ", dueDate === todayDate)
+        //console.log("dueDate: ", dueDate)
+       // console.log("fechaDeHoy: ", todayDate)
+       // console.log("es la misma fecha? ", dueDate === todayDate)
 
         if (dueDate === todayDate) {
             color = "yellow"
         }
 
-        console.log("COLOR: ", color)
+        //console.log("COLOR: ", color)
         let id =generateTaskId();
-
-        taskArr.push({
+        //to-do --- to do section
+        //inProgress -- progress section
+        //done ---- done section
+        let status = "to-do";
+         taskArr.push({
             id,
             titleInput,
             taskDescription,
             taskDate,
-            color
+            color,
+            status
+            
         })
     
         localStorage.setItem("tasks", JSON.stringify(taskArr))
-        createTaskCard(id, titleInput, taskDescription, taskDate, color);
+        createTaskCard(id, titleInput, taskDescription, taskDate, color, status);
         const modal = document.getElementById('modal')
         modal.style.display = 'none';
 
